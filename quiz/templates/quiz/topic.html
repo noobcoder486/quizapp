@@ -1,0 +1,43 @@
+{% extends "quiz/base.html" %}
+{% load static %}
+
+{% block title %}
+Quiz
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'quiz/topic.js' %}" defer></script>
+{% endblock scripts %}
+
+{% block content %}
+
+<div class="modal fade" id="quizModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Start Quiz ?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modalbody">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+            <button id="start-button" type="button" class="btn btn-success">Yes, Start</button>
+        </div>
+    </div>
+</div>
+</div>
+
+    <div class="container mr-4">
+        <div class="h1">Topics</div>
+        <hr />
+        {% for obj in topics %}
+            <button class="btn btn-secondary modal-button" data-bs-pk="{{obj.t_id}}" data-bs-topic="{{obj.topic}}"
+                data-bs-questions="{{obj.number_of_questions}}" data-bs-difficulty="{{obj.difficulty}}" data-bs-time="{{obj.time_required}}"
+                data-bs-pass="{{obj.score_to_pass}}" data-bs-toggle="modal" data-bs-target="#quizModal">
+                {{obj.topic}}
+            </button><br /><br />
+        {% endfor %}
+    </div>
+{% endblock %}
