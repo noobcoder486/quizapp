@@ -41,8 +41,8 @@ class Answer(models.Model):
 
 class UserRecord(models.Model):
     User=models.ForeignKey(User, on_delete=models.CASCADE)
-    question=models.ForeignKey(Question, on_delete=models.CASCADE)
-    answer_choosen=models.ForeignKey(Answer, on_delete=models.CASCADE)
+    question=models.CharField(max_length=100)
+    answer_choosen=models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.User} | {self.question}"

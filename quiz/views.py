@@ -2,7 +2,7 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from .models import Topic, Question, Answer, UserRecord
 from django.utils.decorators import method_decorator
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 
 
 @method_decorator(login_required, name='dispatch')
@@ -29,7 +29,7 @@ class TopicView(ListView):
 def datasave(request,t_id):
     if request.method=="POST":
         user=request.user
-        question_id=request.POST.get('hidden1')
+        question_id=request.POST.get('hidden1')     
         question=request.POST.get('hidden')
         answer_id=request.POST.get(question)
         query=UserRecord(User=user,question=question_id,answer_choosen=answer_id)
@@ -45,8 +45,8 @@ def datasave(request,t_id):
     for question_id in total_questions:
         if question_id not in answered_list:
             questionset=Question.objects.filter(q_id=question_id)
-            print(questionset)
             answerset=Answer.objects.filter(question=question_id)
+            break
         else:
             continue
     for question in questionset:
@@ -54,8 +54,7 @@ def datasave(request,t_id):
     context={
         "questions":questionset,
         "answers":answerset,
-    }
-                
+    }     
     return render(request, "quiz/quizz.html", context=context)
 
 
