@@ -4,27 +4,27 @@
 {% block title %}
 
 {% endblock title %}
-    Quiz
-{% block scripts %}
-    <script src="{% static 'quiz/home.js' %}" defer></script>
-{% endblock scripts %}
+
 
 {% block content %}
     <div class="container">
-        {% for topic in questions.get_topic.all %}
-            <h1>{{topic}}</h1><hr />
-        {% endfor %}
-        <form id="quiz-form" method="POST" class="mt-3 mb-3">
+        <form id="quiz-form" action="{% url 'datasave' %}" method="POST" class="mt-3 mb-3">
             {% csrf_token %}
             <div id="quiz-box">
-                {% for text in questions %}
-                    {{text}}<br />
-                    <div class="form-check">
-
-                    </div>
-                {% endfor %}
+                {% for question in questions %}
+                        {{question}}<br />
+                        {% for answer in answers %}
+                            <div class="form-check">
+                                <input type="hidden" name="hidden1" value="{{question.q_id}}">
+                                <input type="hidden" name="hidden" value="{{question}}">
+                                <input type="radio" class="ans" id="{{question}}-{{answer}}" name="{{question}}" value="{{answer.a_id}}">
+                                <label for="{{question}}">{{answer}}</label>
+                            </div>
+                        {% endfor %}<br />
+                    {% endfor %}
+                <br />
             </div> 
-            <button type="submit" class="btn btn-primary mt-3">Save</button>
+            <button type="submit" class="btn btn-primary mt-3">Next</button>
         </form>
     </div>
 {% endblock content %}

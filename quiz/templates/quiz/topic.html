@@ -32,10 +32,14 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="container mr-4">
         <div class="h1">Topics</div>
         <hr />
+
         {% for obj in topics %}
-            <button class="btn btn-secondary modal-button" data-bs-pk="{{obj.t_id}}" data-bs-topic="{{obj.topic}}"
-                data-bs-questions="{{obj.number_of_questions}}" data-bs-difficulty="{{obj.difficulty}}" data-bs-time="{{obj.time_required}}"
-                data-bs-pass="{{obj.score_to_pass}}" data-bs-toggle="modal" data-bs-target="#quizModal">
+            <button class="btn btn-secondary modal-button" 
+            data-bs-pk="{{obj.t_id}}"
+            data-bs-topic="{{obj.topic}}" 
+             data-bs-time="{{obj.time_required}}"
+             data-bs-toggle="modal"
+             data-bs-target="#quizModal">
                 {{obj.topic}}
             </button><br /><br />
         {% endfor %}

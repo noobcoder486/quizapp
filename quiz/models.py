@@ -1,23 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
 import uuid
-
-DIFF_CHOICES = (
-    ('easy', 'easy'),
-    ('medium', 'medium'),
-    ('hard', 'hard'),
-)
-    
-class Subject(models.Model):
-
-    s_id = models.UUIDField(
-         primary_key = True,
-         default = uuid.uuid4,
-         editable = False)
-
-    subject_name = models.CharField(max_length=100)
-    def __str__(self):
-        return self.subject_name
-
 
 class Topic(models.Model):
     t_id = models.UUIDField(
@@ -25,14 +8,10 @@ class Topic(models.Model):
          default = uuid.uuid4,
          editable = False)
     topic = models.CharField(max_length=200)
-    number_of_questions = models.IntegerField()
     time_required = models.IntegerField(help_text="Duration of Quizz in minutes")
-    difficulty = models.CharField(max_length=6, choices=DIFF_CHOICES)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    score_to_pass = models.IntegerField(help_text="Minimum score to Pass in %", null=True)
 
     def __str__(self):
-        return f"{self.topic} | {self.subject}"
+        return f"{self.topic}"
 
 
 class Question(models.Model):
@@ -52,9 +31,19 @@ class Answer(models.Model):
          default = uuid.uuid4,
          editable = False)
     answer= models.CharField(max_length=100)
-    correct=models.BooleanField(default=False)
+    is_correct=models.BooleanField(default=False)
     question=models.ForeignKey(Question, on_delete=models.CASCADE)
+    
 
     def __str__(self):
-        return f"{self.answer} {self.correct}"
+        return f"{self.answer}"
+
+
+class UserRecord(models.Model):
+    User=models.ForeignKey(User, on_delete=models.CASCADE)
+    question=models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer_choosen=models.ForeignKey(Answer, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.User} | {self.question}"
 
