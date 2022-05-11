@@ -3,7 +3,6 @@ const modalBody = document.getElementById('modalbody')
 const startBtn = document.getElementById('start-button')
 
 const url = window.location.href
-console.log(url)
 
 modalBtns.forEach(modalBtn=> modalBtn.addEventListener('click', ()=>{
     const id = modalBtn.getAttribute('data-bs-pk')

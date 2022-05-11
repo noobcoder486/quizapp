@@ -11,29 +11,10 @@ class TopicView(ListView):
     template_name = 'quiz/topic.html'
     context_object_name = 'topics'
 
-"""class QuestionListView(ListView):
-    model = Question
-    template_name = 'quiz/quizz.html'
-    context_object_name = 'questions'
-
-    def get_queryset(self):
-        question_set=[]
-        topic_id=self.kwargs.get('t_id')
-        questionss = Question.objects.filter(topic=topic_id)
-        for question in questionss:
-            answers=Answer.objects.filter(question=question.q_id)
-            question_set.append({question:answers})
-        return question_set"""
     
 
-def datasave(request,t_id):
-    if request.method=="POST":
-        user=request.user
-        question_id=request.POST.get('hidden1')     
-        question=request.POST.get('hidden')
-        answer_id=request.POST.get(question)
-        query=UserRecord(User=user,question=question_id,answer_choosen=answer_id)
-        query.save()
+def nextques(request,t_id):
+    
     questions=Question.objects.filter(topic=t_id)
     total_questions=[]
     for question in questions:
@@ -49,13 +30,22 @@ def datasave(request,t_id):
             break
         else:
             continue
-    for question in questionset:
-        answered_list.append(question.q_id)
     context={
         "questions":questionset,
         "answers":answerset,
-    }     
-    return render(request, "quiz/quizz.html", context=context)
+    }
+    if request.method=="POST":
+        user=request.user
+        question_id=request.POST.get('hidden1')     
+        question=request.POST.get('hidden')
+        answer_id=request.POST.get(question)
+        query=UserRecord(User=user,question=question_id,answer_choosen=answer_id)
+        query.save()
+    if len(user_answered)<len(total_questions):
+        return render(request, "quiz/quizz.html", context=context)
+    else:
+        return render(request, "quiz/quizend.html")
+    
 
 
 
