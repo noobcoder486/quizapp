@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Topic, Question, Answer, UserRecord
 from django.utils.decorators import method_decorator
 from django.shortcuts import render,redirect
+import uuid
 
 
 @method_decorator(login_required, name='dispatch')
@@ -14,12 +15,11 @@ class TopicView(ListView):
     
 
 def nextques(request,t_id):
-    
     questions=Question.objects.filter(topic=t_id)
     total_questions=[]
     for question in questions:
         total_questions.append(str(question.q_id))
-    user_answered=UserRecord.objects.filter(User=request.user)
+    user_answered=UserRecord.objects.filter(User=request.user).filter(topic=t_id)
     answered_list=[]
     for answered_question in user_answered:
         answered_list.append(str(answered_question.question))

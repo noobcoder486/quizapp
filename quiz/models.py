@@ -43,7 +43,8 @@ class UserRecord(models.Model):
     User=models.ForeignKey(User, on_delete=models.CASCADE)
     question=models.CharField(max_length=100)
     answer_choosen=models.CharField(max_length=100)
+    topic=models.ForeignKey(Topic, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.User} | {self.question}"
+        return f"{self.User} | {self.question} | {self.answer_choosen}"
 

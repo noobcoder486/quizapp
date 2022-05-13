@@ -21,7 +21,7 @@
                             <div class="form-check">
                                 <input type="hidden" name="hidden1" value="{{question.q_id}}">
                                 <input type="hidden" name="hidden" value="{{question}}">
-                                <input type="radio" class="ans" id="{{question}}-{{answer}}" name="{{question}}" value="{{answer.a_id}}">
+                                <input type="radio" class="ans" id="{{question}}-{{answer}}" name="{{question}}" value="{{answer.a_id}}" required>
                                 <label for="{{question}}">{{answer}}</label>
                             </div>
                         {% endfor %}<br />
