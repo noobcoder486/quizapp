@@ -12,7 +12,7 @@
 {% endblock scripts %}
 {% block content %}
     <div class="container">
-        <form id="quiz-form" action="" method="POST" class="mt-3 mb-3">
+        <form id="quiz-form" action="{% url 'save-data' %}" method="POST" class="mt-3 mb-3">
             {% csrf_token %}
             <div id="quiz-box">
                 {% for question in questions %}

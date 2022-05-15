@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Topic, Question, Answer, UserRecord
 from django.utils.decorators import method_decorator
 from django.shortcuts import render,redirect
-import uuid
+from django.urls import reverse
 
 
 @method_decorator(login_required, name='dispatch')
@@ -34,17 +34,26 @@ def nextques(request,t_id):
         "questions":questionset,
         "answers":answerset,
     }
+    if len(user_answered)<len(total_questions):
+        return render(request, "quiz/quizz.html", context=context)
+    else:
+        return render(request, "quiz/quizend.html")
+
+def savedata(request):
     if request.method=="POST":
         user=request.user
         question_id=request.POST.get('hidden1')     
         question=request.POST.get('hidden')
         answer_id=request.POST.get(question)
-        query=UserRecord(User=user,question=question_id,answer_choosen=answer_id)
+        question_object=Question.objects.filter(q_id=question_id)
+        topic=question_object.topic
+        topic_object=Topic.objects.filter(topic=topic)
+        topic_id=topic_object.t_id
+        print(topic_id)
+        query=UserRecord(User=user,question=question_id,answer_choosen=answer_id,topic=topic_object)
         query.save()
-    if len(user_answered)<len(total_questions):
-        return render(request, "quiz/quizz.html", context=context)
-    else:
-        return render(request, "quiz/quizend.html")
+        return redirect(reverse('topic', kwargs={'args_1':topic_id}))
+
     
 
 
