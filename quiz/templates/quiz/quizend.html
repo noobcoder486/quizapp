@@ -1,5 +1,67 @@
 {% extends "quiz/base.html" %}
+{% load static %}
 
+{% block title %}
+    Score
+{% endblock title %}
+
+{% block scripts %}
+    <script src="{% static 'quiz/score.js' %}" defer></script>
+{% endblock scripts %}
+  
 {% block content %}
-    <h1>This is QuizEnd</h1>
+<div style="margin-left:10%; text-align: center;" class="container">
+    <h1>Congratulations {% for score in scores|slice:":1" %}{{score.User}}{% endfor %}, You have completed the Quiz!</h1>
+</div>
+<div class="container" style="margin-left:10%;text-align: center;">
+    <h2 class="text-muted">You're score is <b>{{score}}</b></h2>
+</div><br />
+    <div class="container" style="margin-left:10%">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <th>
+                    User
+                </th>
+                <th>
+                    Question
+                </th>
+                <th>
+                    Answer
+                </th>
+                <th>
+                    Right/Wrong
+                </th>
+                <th>
+                    Score
+                </th>
+            </thead>
+            {% for score in scores %}
+                <tr >
+                    <th>
+                        {{score.User}}
+                    </th>
+                    <td>
+                        {{score.question}}
+                    </td>
+                    <td>
+                        {{score.answer_choosen}}
+                    </td>
+                        {% if score.answer_choosen.is_correct %}
+                        <td id="validate1" class="bg-success text-light"><b>Right</b></td>
+                        {% else %}
+                        <td id="validate2"c class="bg-danger text-light"><b>Wrong</b></td>
+                        {% endif %}
+                    <td>
+                        {% if score.answer_choosen.is_correct %}
+                            +1
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </table>
+    </div><br /> <br />
+    
 {% endblock content %}

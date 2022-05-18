@@ -41,10 +41,10 @@ class Answer(models.Model):
 
 class UserRecord(models.Model):
     User=models.ForeignKey(User, on_delete=models.CASCADE)
-    question=models.CharField(max_length=100)
-    answer_choosen=models.CharField(max_length=100)
+    question=models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer_choosen=models.ForeignKey(Answer, on_delete=models.CASCADE)
     topic=models.ForeignKey(Topic, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.User} | {self.question} | {self.answer_choosen}"
+        return f"{self.User} | {self.question} | {self.answer_choosen} | {self.answer_choosen.is_correct}"
 

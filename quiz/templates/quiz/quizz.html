@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block title %}
-
+    {% for question in questions %}
+        {{question.topic}}
+    {% endfor %}
 {% endblock title %}
 
 {% block scripts %}
