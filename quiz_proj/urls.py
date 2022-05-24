@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from users import views as user_views
-from quiz import views as quiz_views
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 

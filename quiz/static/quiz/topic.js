@@ -7,7 +7,9 @@ const url = window.location.href
 modalBtns.forEach(modalBtn=> modalBtn.addEventListener('click', ()=>{
     const id = modalBtn.getAttribute('data-bs-pk')
     const topic = modalBtn.getAttribute('data-bs-topic')
-    const time = modalBtn.getAttribute('data-bs-time')
+    const times = modalBtn.getAttribute('data-bs-time')
+    const time=Math.floor(times/60)
+    
 
     modalBody.innerHTML = `
         <div class="h5 mb-3">Are you sure you want to begin "<b>${topic}</b>"?</div>

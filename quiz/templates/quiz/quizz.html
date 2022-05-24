@@ -1,36 +1,67 @@
 {% extends "quiz/base.html" %}
 {% load static %}
 
+
 {% block title %}
-    {% for question in questions %}
+    {% for question in questionset %}
         {{question.topic}}
     {% endfor %}
 {% endblock title %}
 
+
 {% block scripts %}
-<script>
-    const url = window.location.href
-</script>
+    <script src="{% static 'quiz/quiz.js' %}" defer></script>
 {% endblock scripts %}
+
+
 {% block content %}
-<div class="container">
-    {% for question in questions %}
-    <form id="quiz-form" action="{% url 'quiz' t_id=question.topic.t_id %}" method="POST" class="mt-3 mb-3">
-        {% csrf_token %}
-        <div id="quiz-box">
-                {{question}}<br />
-                {% for answer in answers %}
-                    <div class="form-check">
-                        <input type="hidden" name="hidden1" value="{{question.q_id}}">
-                        <input type="hidden" name="hidden" value="{{question}}">
-                        <input type="radio" class="ans" id="{{question}}-{{answer}}" name="{{question}}" value="{{answer.a_id}}" required>
-                        <label for="{{question}}">{{answer}}</label>
-                    </div>
-                {% endfor %}<br />
-            <br />
+<div class="container" style="border: 2px solid black;background-color:gainsboro;border-radius: 10px;box-shadow: 2px 10px 20px #888888;transform: translate(25%, 0%);margin: auto;padding:10%;">
+    {% for question in questionset %}
+        <div class="row">
+            <div class="col text-center">
+                <h1>
+                   {{question.topic}} Quiz
+                </h1>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Next</button>
-    </form>
+        <form id="quiz-form" name="quizForm" action="{% url 'quiz' t_id=question.topic.t_id %}" method="POST" class="mt-3 mb-3">
+            {% csrf_token %}
+            <div class="row" >
+                <div class="col-4">
+                    <b>Attempting <b>{{current}}</b>/<b>{{out_of}}</b></b><br />
+                </div>
+                <div class="col-8 text-right">
+                    <b>Time Remaining :</b> <b id="timer"></b>
+                    <input type="hidden" id="time_left" name="timerhidden" value="{{time_left}}" />
+                    <input type="hidden" id="topicId" name="topicdid" value="{{question.topic.t_id}}" />
+                </div>
+            </div>
+            <div id="quiz-box">
+                    <table class="table" style="border-radius: 10px;">
+                        <tr>
+                            <td style="border:1px solid black">
+                                {{current}}. {{question}}
+                            </td>
+                        </tr>
+                    {% for answer in answerset %}
+                    <tr><td>
+                        <div class="form-check">
+                            <input type="hidden" name="hidden1" value="{{question.q_id}}">
+                            <input type="hidden" name="hidden" value="{{question}}">
+                            <input type="radio" class="ans" id="{{question}}-{{answer}}" name="{{question}}" value="{{answer.a_id}}" required>
+                            <label for="{{question}}">{{answer}}</label>
+                        </div>
+                    {% endfor %}
+                    </td></tr><br /><br />
+                </table>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-primary mt-3">Next</button>
+                </div>
+            </div>
+            
+        </form>
     {% endfor %}
-</div>
+</div><br /><br /><br />
 {% endblock content %}

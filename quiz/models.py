@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
@@ -8,7 +9,7 @@ class Topic(models.Model):
          default = uuid.uuid4,
          editable = False)
     topic = models.CharField(max_length=200)
-    time_required = models.IntegerField(help_text="Duration of Quizz in minutes")
+    time_required = models.IntegerField(help_text="Duration of Quizz in seconds")
 
     def __str__(self):
         return f"{self.topic}"
@@ -48,3 +49,14 @@ class UserRecord(models.Model):
     def __str__(self):
         return f"{self.User} | {self.question} | {self.answer_choosen} | {self.answer_choosen.is_correct}"
 
+
+class Time_Started(models.Model):
+    User=models.ForeignKey(User, on_delete=models.CASCADE)
+    topic=models.ForeignKey(Topic, on_delete=models.CASCADE)
+    starting_time=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.User} | {self.starting_time.time()}"
+
+    class Meta:
+        verbose_name_plural='Time_Started'

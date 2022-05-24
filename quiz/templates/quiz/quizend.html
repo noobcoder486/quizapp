@@ -1,67 +1,56 @@
 {% extends "quiz/base.html" %}
 {% load static %}
 
+
 {% block title %}
     Score
 {% endblock title %}
 
+
 {% block scripts %}
-    <script src="{% static 'quiz/score.js' %}" defer></script>
 {% endblock scripts %}
   
+
 {% block content %}
-<div style="margin-left:10%; text-align: center;" class="container">
-    <h1>Congratulations {% for score in scores|slice:":1" %}{{score.User}}{% endfor %}, You have completed the Quiz!</h1>
-</div>
+
 <div class="container" style="margin-left:10%;text-align: center;">
-    <h2 class="text-muted">You're score is <b>{{score}}</b></h2>
+    {% if score <= 3 %}
+        <h1>Sorry {% for score in scores|slice:":1" %}{{score.User}}{% endfor %}, You couldnt clear the Quiz!</h1>
+        <h2 class="text-muted">You're score is <b>{{score}}</b></h2>
+    {% else %}
+        <h1>Congratulations {% for score in scores|slice:":1" %}{{score.User}}{% endfor %}, You have successfully clear the Quiz!</h1>
+        <h2 class="text-muted">You're score is <b>{{score}}</b></h2>
+    {% endif %}
 </div><br />
+
     <div class="container" style="margin-left:10%">
-        <table class="table table-hover">
-            <thead class="table-dark">
-                <th>
-                    User
-                </th>
-                <th>
-                    Question
-                </th>
-                <th>
-                    Answer
-                </th>
-                <th>
-                    Right/Wrong
-                </th>
-                <th>
-                    Score
-                </th>
+        <table class="table table-hover" style="border: 1px solid black;">
+            <thead class="thead-dark" >
+                <th style="border: 1px solid white">User</th>
+                <th style="border: 1px solid white">Question</th>
+                <th style="border: 1px solid white">Answer</th>
+                <th style="border: 1px solid white">Right/Wrong</th>
+                <th style="border: 1px solid white">Score</th>
             </thead>
             {% for score in scores %}
-                <tr >
-                    <th>
-                        {{score.User}}
-                    </th>
-                    <td>
-                        {{score.question}}
-                    </td>
-                    <td>
-                        {{score.answer_choosen}}
-                    </td>
-                        {% if score.answer_choosen.is_correct %}
-                        <td id="validate1" class="bg-success text-light"><b>Right</b></td>
-                        {% else %}
-                        <td id="validate2"c class="bg-danger text-light"><b>Wrong</b></td>
-                        {% endif %}
-                    <td>
-                        {% if score.answer_choosen.is_correct %}
+                <tr style="border: 1px solid black">
+                    <th style="border: 1px solid black">{{score.User}}</th>
+                    <td style="border: 1px solid black">{{score.question}}</td>
+                    <td style="border: 1px solid black">{{score.answer_choosen}}</td>
+                    {% if score.answer_choosen.is_correct %}
+                        <td style="border: 1px solid black" id="validate1" class="bg-success text-light"><b>Right</b></td>
+                    {% else %}
+                        <td style="border: 1px solid black" id="validate2"c class="bg-danger text-light"><b>Wrong</b></td>
+                    {% endif %}
+                    <td style="border: 1px solid black">{% if score.answer_choosen.is_correct %}
                             +1
                         {% else %}
                             0
                         {% endif %}
                     </td>
-
                 </tr>
             {% endfor %}
-            </table>
-    </div><br /> <br />
+        </table>
+    </div><br /><br />
     
 {% endblock content %}
