@@ -18,12 +18,12 @@ Quiz
     {% for obj in topics %}
         <button type="button"
         class="btn btn-secondary modal-button"
-        data-bs-pk="{{obj.t_id}}"
-        data-bs-topic="{{obj.topic}}" 
+        data-bs-pk="{{obj.id}}"
+        data-bs-topic="{{obj.text}}" 
         data-bs-time="{{obj.time_required}}"
         data-toggle="modal"
         data-target="#quizModal">
-        {{obj.topic}}
+        {{obj.name}}
         </button><br /><br />
     {% endfor %}
 

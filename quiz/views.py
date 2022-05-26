@@ -1,13 +1,13 @@
-from django.views import View
 import datetime
-from django.views.generic import ListView,View
+from .models import TimeStarted, Topic, Question, Answer, UserRecord
 from django.contrib.auth.decorators import login_required
-from pytz import timezone
-from .models import Time_Started, Topic, Question, Answer, UserRecord
-from django.utils.decorators import method_decorator
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView,View
+
+
 
 @method_decorator(login_required, name='dispatch')
 class TopicView(ListView):
@@ -22,8 +22,8 @@ class QuestionView(View):
     def get_context_data(self, **kwargs):
         context={}
         t_id=self.kwargs.get('t_id')
-        topic = Topic.objects.get(t_id=t_id)
-        time_object=Time_Started.objects.get_or_create(User=self.request.user, topic=topic)
+        topic = Topic.objects.get(id=t_id)
+        time_object=TimeStarted.objects.get_or_create(User=self.request.user, topic=topic)
         time_started=time_object[0]
         timer=time_started.starting_time #starting time
         current_time=datetime.datetime.now()
@@ -39,14 +39,14 @@ class QuestionView(View):
         questions=Question.objects.filter(topic=t_id)
         total_questions=[]
         for question in questions:
-            total_questions.append(str(question.q_id))
+            total_questions.append(str(question.id))
         user_answered=UserRecord.objects.filter(User=self.request.user).filter(topic=t_id)
         answered_list=[]
         for answered_question in user_answered:
-            answered_list.append(str(answered_question.question.q_id))   
+            answered_list.append(str(answered_question.question.id))   
         for question_id in total_questions:
             if question_id not in answered_list:
-                questionset=Question.objects.filter(q_id=question_id)
+                questionset=Question.objects.filter(id=question_id)
                 answerset=Answer.objects.filter(question=question_id)
                 out_of=len(total_questions)
                 current=len(answered_list)+1
@@ -64,21 +64,21 @@ class QuestionView(View):
         t_id=self.kwargs.get('t_id')
         user=self.request.user
         question_id=self.request.POST.get('hidden1')
-        question_object=Question.objects.get(q_id=question_id)     
+        question_object=Question.objects.get(id=question_id)     
         question=self.request.POST.get('hidden')
         answer_id=self.request.POST.get(question)
-        answer_object=Answer.objects.get(a_id=answer_id)
-        topic_object=Topic.objects.get(t_id=t_id)
+        answer_object=Answer.objects.get(id=answer_id)
+        topic_object=Topic.objects.get(id=t_id)
         query=UserRecord(User=user,question=question_object,answer_choosen=answer_object,topic=topic_object)
         query.save()
         questions=Question.objects.filter(topic=t_id)
         total_questions=[]
         for question in questions:
-            total_questions.append(str(question.q_id))
+            total_questions.append(str(question.id))
         user_answered=UserRecord.objects.filter(User=self.request.user).filter(topic=t_id)
         answered_list=[]
         for answered_question in user_answered:
-            answered_list.append(str(answered_question.question.q_id))
+            answered_list.append(str(answered_question.question.id))
         if len(user_answered)<len(total_questions):
             return HttpResponseRedirect(reverse('quiz',kwargs={'t_id':t_id}))
         else:
@@ -89,11 +89,11 @@ class QuestionView(View):
         questions=Question.objects.filter(topic=t_id)
         total_questions=[]
         for question in questions:
-            total_questions.append(str(question.q_id))
+            total_questions.append(str(question.id))
         user_answered=UserRecord.objects.filter(User=self.request.user).filter(topic=t_id)
         answered_list=[]
         for answered_question in user_answered:
-            answered_list.append(str(answered_question.question.q_id))
+            answered_list.append(str(answered_question.question.id))
         if len(user_answered)<len(total_questions):
             return render(request,self.template_name,self.get_context_data())
         else:
