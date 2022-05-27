@@ -1,4 +1,5 @@
 import uuid
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -42,7 +43,7 @@ class Answer(models.Model):
 
 
 class UserRecord(models.Model):
-    User=models.ForeignKey(User, on_delete=models.CASCADE)
+    User=models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     question=models.ForeignKey(Question, on_delete=models.CASCADE)
     answer_choosen=models.ForeignKey(Answer, on_delete=models.CASCADE)
     topic=models.ForeignKey(Topic, on_delete=models.CASCADE)
@@ -52,7 +53,7 @@ class UserRecord(models.Model):
 
 
 class TimeStarted(models.Model):
-    User=models.ForeignKey(User, on_delete=models.CASCADE)
+    User=models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     topic=models.ForeignKey(Topic, on_delete=models.CASCADE)
     starting_time=models.DateTimeField(auto_now_add=True)
 

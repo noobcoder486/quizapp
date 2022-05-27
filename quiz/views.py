@@ -55,9 +55,7 @@ class QuestionView(View):
                 context['out_of']=out_of
                 context['current']=current
                 context['time_left']=time_left
-                break   
-            else:
-                continue
+                break
         return context
 
     def post(self, request, *args, **kwargs):
@@ -107,15 +105,15 @@ class ScoreListView(ListView):
 
     def get_queryset(self):
         topic_id=self.kwargs.get('t_id')
-        userrecord=UserRecord.objects.filter(User=self.request.user).filter(topic=topic_id)
-        return userrecord
+        user_record=UserRecord.objects.filter(User=self.request.user).filter(topic=topic_id)
+        return user_record
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         topic_id=self.kwargs.get('t_id')
-        Userrecord=UserRecord.objects.filter(User=self.request.user).filter(topic=topic_id)
+        user_record=UserRecord.objects.filter(User=self.request.user).filter(topic=topic_id)
         total_score=0
-        for score in Userrecord:
+        for score in user_record:
             if score.answer_choosen.is_correct:
                 total_score= total_score+1
         self.request.session['score']=total_score

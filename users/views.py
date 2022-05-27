@@ -1,15 +1,16 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
+import pyotp
+from django.contrib.auth.models import User
 from .forms import UserRegisterForm
-
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
+            otp=pyotp.totp('base32secret3232')
             form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account Created for {username}. You can Login')
+            messages.success(request, f'Account Created for {User.username}. You can Login')
             return redirect('login')
     else:
         form = UserRegisterForm()

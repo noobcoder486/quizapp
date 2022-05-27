@@ -116,6 +116,8 @@ USE_TZ = False
 
 USE_L10N = True
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -130,3 +132,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'topic'
 
 LOGIN_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'shubhamd@yodaplus.com'
+EMAIL_HOST_PASSWORD = 'Sbhm@8291'
+EMAIL_USE_TLS = True
