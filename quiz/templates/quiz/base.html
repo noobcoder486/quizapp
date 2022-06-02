@@ -34,6 +34,7 @@
             <a class="nav-item nav-link" href="{% url 'topic' %}">Home</a>
           </div>
           <!-- Navbar Right Side -->
+          {% if user.is_authenticated %}
           <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
             <ul class="navbar-nav">
               <li class="nav-item">
@@ -41,6 +42,18 @@
               </li>
             </ul>
           </div>
+          {% else %}
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+          </ul>
+          {% endif %}
           
         </div>
       </div>

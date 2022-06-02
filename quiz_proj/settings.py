@@ -133,9 +133,13 @@ LOGIN_REDIRECT_URL = 'topic'
 
 LOGIN_URL = 'login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'shubhamd@yodaplus.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.mail.yahoo.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'dubeyshubham823@yahoo.com'
 EMAIL_HOST_PASSWORD = 'Sbhm@8291'
 EMAIL_USE_TLS = True
+
+AUTH_USER_MODEL='users.CustomUser'
+
+
