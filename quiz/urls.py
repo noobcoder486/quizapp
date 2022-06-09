@@ -1,6 +1,5 @@
-from . views import QuestionView, ScoreListView, TopicView
 from django.urls import path
-
+from . views import QuestionView, ScoreListView, TopicView
 
 
 urlpatterns = [

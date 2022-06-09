@@ -1,15 +1,14 @@
 import datetime
-from . models import Topic, Question, Answer, UserRecord, TimeStarted
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView,View
 from users.mixins import UserVerifiedMixin
 from users.models import CustomUser
+from . models import Topic, Question, Answer, UserRecord, TimeStarted
 
 
 
-# @method_decorator(, name='dispatch')
 class TopicView(UserVerifiedMixin, ListView):
     model = Topic
     template_name = 'quiz/topic.html'
