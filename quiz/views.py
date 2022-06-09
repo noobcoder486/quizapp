@@ -1,20 +1,16 @@
 import datetime
-from numpy import ones_like
-
-from pyotp import TOTP
-from .models import TimeStarted, Topic, Question, Answer, UserRecord
-from django.contrib.auth.decorators import login_required
+from . models import Topic, Question, Answer, UserRecord, TimeStarted
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.views.generic import ListView,View
+from users.mixins import UserVerifiedMixin
 from users.models import CustomUser
 
 
 
-@method_decorator(login_required, name='dispatch')
-class TopicView(ListView):
+# @method_decorator(, name='dispatch')
+class TopicView(UserVerifiedMixin, ListView):
     model = Topic
     template_name = 'quiz/topic.html'
     context_object_name = 'topics'
@@ -65,7 +61,6 @@ class QuestionView(View):
                             context['time_left']=time_left
                             return context
                         else:
-                            print(question.type, question.id,question.text)
                             out_of=len(total_questions)
                             current=len(answered_list)+1
                             context['questionset']=questionset
@@ -76,7 +71,7 @@ class QuestionView(View):
         else:
             return HttpResponseRedirect(reverse('validate', kwargs={'user':self.request.user}))
         
-        
+
 
     def post(self, request, *args, **kwargs):
         user_object=CustomUser.objects.get(username=self.request.user)
@@ -145,7 +140,6 @@ class ScoreListView(ListView):
         context = super().get_context_data(**kwargs)
         topic_id=self.kwargs.get('t_id')
         user_record=UserRecord.objects.filter(user=self.request.user).filter(topic=topic_id)
-        oneline_answer=[]
         total_score=0
         for score in user_record:
             if score.question.type=="mcq":
@@ -156,11 +150,10 @@ class ScoreListView(ListView):
                 question_id=score.question.id
                 answer_object=Answer.objects.get(question=question_id)
                 answer=answer_object.text
-                oneline_answer.append({score.question:answer})
                 if user_answer==answer:
                     total_score=total_score+1
+        context['user'] = self.request.user
         context['score']=total_score
-        context['oneline_answer']=oneline_answer
         return context
 
     

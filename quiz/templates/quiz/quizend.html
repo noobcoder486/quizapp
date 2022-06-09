@@ -15,10 +15,10 @@
 
 <div class="container" style="margin-left:10%;text-align: center;">
     {% if score <= 3 %}
-        <h1>Sorry {% for score in scores|slice:":1" %}{{score.User}}{% endfor %}, You couldnt clear the Quiz!</h1>
+        <h1>Sorry {% for score in scores|slice:":1" %}{{score.user}}{% endfor %}, You couldnt clear the Quiz!</h1>
         <h2 class="text-muted">You're score is <b>{{score}}</b></h2>
     {% else %}
-        <h1>Congratulations {% for score in scores|slice:":1" %}{{score.User}}{% endfor %}, You have successfully clear the Quiz!</h1>
+        <h1>Congratulations {% for score in scores|slice:":1" %}{{score.user}}{% endfor %}, You have successfully clear the Quiz!</h1>
         <h2 class="text-muted">You're score is <b>{{score}}</b></h2>
     {% endif %}
 </div><br />
@@ -33,7 +33,7 @@
             </thead>
             {% for score in scores %}
                 <tr style="border: 1px solid black">
-                    <th style="border: 1px solid black">{{score.user}}</th>
+                    <th style="border: 1px solid black">{{user}}</th>
                     <td style="border: 1px solid black">{{score.question}}</td>
                     <td style="border: 1px solid black">
                         {% if score.question.type == "mcq" %}

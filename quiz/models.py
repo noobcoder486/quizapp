@@ -63,7 +63,7 @@ class TimeStarted(models.Model):
     starting_time=models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user} | {self.starting_time.time()}"
+        return f"User: {self.user} | Time: {self.starting_time.time()} | Topic: {self.topic}"
 
     class Meta:
         verbose_name_plural='TimeStarted'
