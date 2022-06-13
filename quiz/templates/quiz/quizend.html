@@ -15,11 +15,11 @@
 
 <div class="container" style="margin-left:10%;text-align: center;">
     {% if score <= 3 %}
-        <h1>Sorry {% for score in scores|slice:":1" %}{{score.user}}{% endfor %}, You couldnt clear the Quiz!</h1>
+        <h1>Sorry {{user}}, You couldnt clear the Quiz!</h1>
         <h2 class="text-muted">You're score is <b>{{score}}</b></h2>
     {% else %}
-        <h1>Congratulations {% for score in scores|slice:":1" %}{{score.user}}{% endfor %}, You have successfully clear the Quiz!</h1>
-        <h2 class="text-muted">You're score is <b>{{score}}</b></h2>
+        <h1>Congratulations {{user}}, You have successfully clear the Quiz!</h1>
+        <h2 class="text-muted">You're score is <b>{{score}}{{user}}</b></h2>
     {% endif %}
 </div><br />
     <div class="container" style="margin-left:10%">
@@ -31,48 +31,70 @@
                 <th style="border: 1px solid white">Right/Wrong</th>
                 <th style="border: 1px solid white">Score</th>
             </thead>
-            {% for score in scores %}
+            {% for question in questions %}
                 <tr style="border: 1px solid black">
                     <th style="border: 1px solid black">{{user}}</th>
-                    <td style="border: 1px solid black">{{score.question}}</td>
+                    <td style="border: 1px solid black">{{question.text}}</td>
                     <td style="border: 1px solid black">
-                        {% if score.question.type == "mcq" %}
-                            {{score.answer_choosen}}
-                        {% else %}
-                            {{score.text_answer}}
-                        {% endif %}
-                    </td>
-                    {% if score.question.type == "mcq" %}
-                        {% if score.answer_choosen.is_correct %}
-                            <td style="border: 1px solid black" id="validate1" class="bg-success text-light"><b>Right</b></td>
-                        {% else %}
-                            <td style="border: 1px solid black" id="validate2" class="bg-danger text-light"><b>Wrong</b></td>
-                        {% endif %}
-                    {% else %}
-                            {% for answer in score.question.answerset.all %}
-                                {% if score.text_answer == answer.text %}
-                                    <td style="border: 1px solid black" id="validate1" class="bg-success text-light"><b>Right</b></td>
-                                {% else %}
-                                    <td style="border: 1px solid black" id="validate2" class="bg-danger text-light"><b>Wrong</b></td>
+                        {% for result in results %}
+                            {% for result_question, result_answer in result.items %}
+                                {% if question == result_question %}
+                                    {{result_answer}}
                                 {% endif %}
                             {% endfor %}
-                    {% endif %}
-                    <td style="border: 1px solid black">
-                        {% if score.question.type == "mcq" %}
-                            {% if score.answer_choosen.is_correct %}
-                                +1
-                            {% else %}
-                                0
-                            {% endif %}
-                        {% else %}
-                        {% for answer in score.question.answerset.all %}
-                            {% if score.text_answer == answer.text %}
-                                +1
-                            {% else %}
-                                0
-                            {% endif %}
                         {% endfor %}
-                        {% endif %}
+                    </td>
+                        {% for result in results %}
+                            {% for result_question, result_answer in result.items %}
+                                {% if question == result_question %}
+                                    {% if question.type == "mcq" %}
+                                        {% for answer in question.answerset.all %}
+                                            {% if result_answer == answer %}
+                                                {% if answer.is_correct %}
+                                                    <td style="border: 1px solid black" id="validate1" class="bg-success text-light"><b>Right</b></td>
+                                                {% else %}
+                                                    <td style="border: 1px solid black" id="validate1" class="bg-danger text-light"><b>Wrong</b></td>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for answer in question.answerset.all %}
+                                            {% if result_answer == answer.text %}
+                                                <td style="border: 1px solid black" id="validate1" class="bg-success text-light"><b>Right</b></td>
+                                            {% else %}
+                                                <td style="border: 1px solid black" id="validate1" class="bg-danger text-light"><b>Wrong</b></td>
+                                            {% endif %}
+                                        {% endfor %}    
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    <td style="border: 1px solid black" id="validate1">
+                        {% for result in results %}
+                            {% for result_question, result_answer in result.items %}
+                                {% if question == result_question %}
+                                    {% if question.type == "mcq" %}
+                                        {% for answer in question.answerset.all %}
+                                            {% if result_answer == answer %}
+                                                {% if answer.is_correct %}
+                                                    <b>+1</b>
+                                                {% else %}
+                                                    <b>0</b>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for answer in question.answerset.all %}
+                                            {% if result_answer == answer.text %}
+                                                <b>+1</b></td>
+                                            {% else %}
+                                               <b>0</b>
+                                            {% endif %}
+                                        {% endfor %}    
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
                     </td>
                 </tr>
             {% endfor %}

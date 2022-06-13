@@ -1,9 +1,9 @@
 import imp
 from django.contrib.auth.mixins import AccessMixin
-from django.http import HttpResponseRedirect
-from django.views import View
-from django.urls import reverse
 from django.contrib import messages
+from django.shortcuts import redirect
+from django.views import View
+
 
 class UserVerifiedMixin(AccessMixin, View):
 
@@ -12,5 +12,5 @@ class UserVerifiedMixin(AccessMixin, View):
             return self.handle_no_permission()
         if request.user.email_confirmed == False:
             messages.warning(request, f"Please Enter the OTP sent on the Email")
-            return HttpResponseRedirect(reverse('validate', kwargs={"user":request.user}))
+            return redirect('validate')
         return super().dispatch(request, *args, **kwargs)
