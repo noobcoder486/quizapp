@@ -1,4 +1,3 @@
-quiz/migrations
-quiz/__pycache__
-users/__pycache__
-users/migrations
+__pycache__
+migrations
+db.sqlite3
