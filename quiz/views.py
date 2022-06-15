@@ -1,13 +1,12 @@
 import datetime
-from re import T
-
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+
 from django.urls import reverse
 from django.views.generic import ListView,View
 
 from users.mixins import UserVerifiedMixin
-from users.models import CustomUser
 
 from . models import Topic, Question, Answer, UserRecord, TimeStarted
 
@@ -56,7 +55,6 @@ class QuestionView(UserVerifiedMixin, View):
                 if question.type==Question.MCQ:
                     answerset=Answer.objects.filter(question = question_id)
                     context['answerset']=answerset
-                    print(answerset)
                 context['out_of']=len(question_ids)
                 context['current']=len(answered_list)+1
                 context['question']=question
@@ -71,12 +69,18 @@ class QuestionView(UserVerifiedMixin, View):
         if question_object.type == Question.MCQ:
             answer_id = self.request.POST.get(question_object.text)
             answer_object = Answer.objects.get(id=answer_id)
-            query = UserRecord(user = self.request.user,question = question_object,answer_choosen = answer_object,topic = topic_object)
-            query.save()
+            if UserRecord.objects.filter(user=self.request.user, question= question_object).exists():
+                messages.info(f"The particular has been already recorded.")
+            else:
+                query = UserRecord(user = self.request.user,question = question_object,answer_choosen = answer_object,topic = topic_object)
+                query.save()
         else:
-            oneline_answer = self.request.POST.get('oneline')                
-            query = UserRecord(user=self.request.user, question=question_object,text_answer=oneline_answer,topic=topic_object)
-            query.save()
+            oneline_answer = self.request.POST.get('oneline')
+            if UserRecord.objects.filter(user=self.request.user, question= question_object).exists():
+                messages.info(f"The particular has been already recorded.")
+            else:
+                query = UserRecord(user=self.request.user, question=question_object, text_answer=oneline_answer, topic=topic_object)
+                query.save()
         questions = Question.objects.filter(topic=topic_id)
         total_questions=[]
         for question in questions:

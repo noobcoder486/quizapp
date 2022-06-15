@@ -48,7 +48,7 @@
                             {% for result_question, result_answer in result.items %}
                                 {% if question == result_question %}
                                     {% if question.type == "mcq" %}
-                                        {% for answer in question.answerset.all %}
+                                        {% for answer in question.answers.all %}
                                             {% if result_answer == answer %}
                                                 {% if answer.is_correct %}
                                                     <td style="border: 1px solid black" id="validate1" class="bg-success text-light"><b>Right</b></td>
@@ -58,7 +58,7 @@
                                             {% endif %}
                                         {% endfor %}
                                     {% else %}
-                                        {% for answer in question.answerset.all %}
+                                        {% for answer in question.answers.all %}
                                             {% if result_answer == answer.text %}
                                                 <td style="border: 1px solid black" id="validate1" class="bg-success text-light"><b>Right</b></td>
                                             {% else %}
@@ -74,7 +74,7 @@
                             {% for result_question, result_answer in result.items %}
                                 {% if question == result_question %}
                                     {% if question.type == "mcq" %}
-                                        {% for answer in question.answerset.all %}
+                                        {% for answer in question.answers.all %}
                                             {% if result_answer == answer %}
                                                 {% if answer.is_correct %}
                                                     <b>+1</b>
@@ -84,7 +84,7 @@
                                             {% endif %}
                                         {% endfor %}
                                     {% else %}
-                                        {% for answer in question.answerset.all %}
+                                        {% for answer in question.answers.all %}
                                             {% if result_answer == answer.text %}
                                                 <b>+1</b></td>
                                             {% else %}

@@ -42,7 +42,7 @@ class Answer(models.Model):
          editable = False)
     text= models.CharField(max_length=100)
     is_correct=models.BooleanField(default=False)
-    question=models.ForeignKey(Question, on_delete=models.CASCADE,related_name="answerset")
+    question=models.ForeignKey(Question, on_delete=models.CASCADE,related_name="answers")
     
 
     def __str__(self):
