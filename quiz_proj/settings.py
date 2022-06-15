@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'quiz',
     'users',
     'crispy_forms',
+    'quizapi',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -141,5 +143,13 @@ EMAIL_HOST_PASSWORD = 'Sbhm@8291'
 EMAIL_USE_TLS = True
 
 AUTH_USER_MODEL='users.CustomUser'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
 
 

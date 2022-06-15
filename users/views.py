@@ -1,10 +1,9 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from . forms import UserRegisterForm, ValidateForm
-from . models import CustomUser
 
 
 class RegisterView(FormView):
