@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import CustomUser
-from .serializers import QuestionSerializer, TopicSerializer, UserSerializer,ScoreSerializer
+from .serializers import QuestionSerializer, TopicSerializer, UserSerializer,ResultSerializer, ScoreSerializer
 
 
 class UserCreateAPIView(generics.CreateAPIView):
@@ -108,9 +108,17 @@ class QuestionAPIView(APIView):
         return Response("Record Posted Successfully")
 
 
-class ScoreAPIView(generics.ListAPIView):
-    serializer_class = ScoreSerializer
+class ResultAPIView(generics.ListAPIView):
+    serializer_class = ResultSerializer
 
+    def get_queryset(self):
+        topic_id = self.kwargs.get("topic_id")
+        topic_object = Topic.objects.get(id = topic_id)
+        result = UserRecord.objects.filter(topic = topic_object, user = self.request.user)
+        return result
+    
+
+class ScoreAPIView(APIView):
     def get(self, request, **kwargs):
         topic_id = self.kwargs.get("topic_id")
         topic_object = Topic.objects.get(id = topic_id)
@@ -127,5 +135,5 @@ class ScoreAPIView(generics.ListAPIView):
                 answer = answer_object.text
                 if user_answer == answer:
                     total_score = total_score + 1
-        serializer = ScoreSerializer(result, context={"score":total_score})
+        serializer = ScoreSerializer("", context= {"score":total_score})
         return Response(serializer.data)

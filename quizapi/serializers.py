@@ -1,3 +1,4 @@
+from dataclasses import field
 from quiz.models import Answer, Question, Topic, UserRecord
 from rest_framework import serializers
 from users.models import CustomUser
@@ -42,11 +43,13 @@ class QuestionSerializer(serializers.ModelSerializer):
         return representation
 
 
-class ScoreSerializer(serializers.ModelSerializer):
+class ResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserRecord
-        fields = "__all__"
+        exclude = ['id']
+    
+class ScoreSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
