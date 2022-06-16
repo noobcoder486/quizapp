@@ -27,6 +27,7 @@
             <thead class="thead-dark" >
                 <th style="border: 1px solid white">User</th>
                 <th style="border: 1px solid white">Question</th>
+                <th style="border: 1px solid white">Correct Answer</th>
                 <th style="border: 1px solid white">Answer</th>
                 <th style="border: 1px solid white">Right/Wrong</th>
                 <th style="border: 1px solid white">Score</th>
@@ -35,6 +36,11 @@
                 <tr style="border: 1px solid black">
                     <th style="border: 1px solid black">{{user}}</th>
                     <td style="border: 1px solid black">{{question.text}}</td>
+                    {% for answer in question.answers.all %}
+                        {% if answer.is_correct %}
+                        <td style="border: 1px solid black" id="validate1" class="bg-success text-light"><b>{{answer}}</b></td>
+                        {% endif %}
+                    {% endfor %}
                     <td style="border: 1px solid black">
                         {% for result in results %}
                             {% for result_question, result_answer in result.items %}
@@ -69,6 +75,7 @@
                                 {% endif %}
                             {% endfor %}
                         {% endfor %}
+                        
                     <td style="border: 1px solid black" id="validate1">
                         {% for result in results %}
                             {% for result_question, result_answer in result.items %}
