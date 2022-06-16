@@ -1,17 +1,21 @@
 import datetime
 from quiz.models import Answer, Question, TimeStarted, Topic, UserRecord
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from users.models import CustomUser
-from .serializers import QuestionSerializer, TopicSerializer, UserSerializer,ResultSerializer, ScoreSerializer
+from . permissions import IsVerified
+from . serializers import (QuestionSerializer, TopicSerializer,
+                        UserSerializer, ResultSerializer, ScoreSerializer)
+
 
 
 class UserCreateAPIView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (AllowAny,)
 
 
 class ValidateAPIView(APIView):
@@ -37,14 +41,41 @@ class ResendOtpAPIView(APIView):
         return Response(data={"Response":f"OTP sent successfully on {user.email}"})
 
 
+class LoginAPIView(APIView):
+
+    def post(self, request):
+        username = request.data['username']
+        password = request.data['password']
+
+        user = CustomUser.objects.filter(username = username).first()
+
+        if user is None:
+            raise AuthenticationFailed("User Not Found")
+
+        if not user.check_password(password):
+            raise AuthenticationFailed("Incorrect Password")
+        
+        refresh = RefreshToken.for_user(user)
+
+        response = Response()
+
+        response.set_cookie(key = 'Access_Token', value = str(refresh.access_token), httponly=True)
+        response.data = {
+            "access_token": str(refresh.access_token)
+        }
+
+        return response
+
+
 class TopicAPIView(generics.ListAPIView):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = [IsVerified, IsAuthenticated]
 
 
 class QuestionAPIView(APIView):
     serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated, IsVerified]
 
     def get(self, request, **kwargs):
         topic_id = self.kwargs.get("topic_id")
@@ -110,6 +141,7 @@ class QuestionAPIView(APIView):
 
 class ResultAPIView(generics.ListAPIView):
     serializer_class = ResultSerializer
+    permission_classes = [IsAuthenticated, IsVerified]
 
     def get_queryset(self):
         topic_id = self.kwargs.get("topic_id")
@@ -119,6 +151,8 @@ class ResultAPIView(generics.ListAPIView):
     
 
 class ScoreAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsVerified]
+
     def get(self, request, **kwargs):
         topic_id = self.kwargs.get("topic_id")
         topic_object = Topic.objects.get(id = topic_id)
@@ -137,3 +171,14 @@ class ScoreAPIView(APIView):
                     total_score = total_score + 1
         serializer = ScoreSerializer("", context= {"score":total_score})
         return Response(serializer.data)
+    
+    
+class LogoutAPIView(APIView):
+    
+    def post(self, request):
+        response = Response()
+        response.delete_cookie('Access_Token')
+        response.data={
+            'message':"Successfully Logged Out"
+        }
+        return response
